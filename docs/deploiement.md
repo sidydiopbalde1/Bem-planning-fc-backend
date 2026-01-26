@@ -50,6 +50,5 @@
   Le pipeline s'exécutera automatiquement sur chaque push vers main ou develop. 
 
 
-
   sudo docker build --network=host -t bem-planning-api .
   https://bem-planning-fc-backend-latest.onrender.com/api/docs#/users/UsersController_findAll
