@@ -1,0 +1,578 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                     String                 @id @default(cuid())
+  email                  String                 @unique
+  name                   String?
+  role                   Role                   @default(ADMIN)
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime               @updatedAt
+  password               String
+  indicateursAcademiques IndicateurAcademique[]
+  modules                Module[]
+  programmes             Programme[]
+  rotationsResponsable   RotationWeekend[]      @relation("ResponsableRotation")
+  rotationsSubstitut     RotationWeekend[]      @relation("SubstitutRotation")
+  disponibilites         DisponibiliteResponsable[] @relation("DisponibilitesResponsable")
+
+  @@index([email])
+  @@map("users")
+}
+
+model Programme {
+  id                     String                 @id @default(cuid())
+  name                   String
+  code                   String                 @unique
+  description            String?
+  semestre               Semestre
+  niveau                 String
+  dateDebut              DateTime
+  dateFin                DateTime
+  status                 StatusProgramme        @default(PLANIFIE)
+  progression            Int                    @default(0)
+  totalVHT               Int
+  userId                 String
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime               @updatedAt
+  activitesAcademiques   ActiviteAcademique[]
+  indicateursAcademiques IndicateurAcademique[]
+  modules                Module[]
+  user                   User                   @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([status])
+  @@index([code])
+  @@map("programmes")
+}
+
+model Intervenant {
+  id                  String                     @id @default(cuid())
+  civilite            String
+  nom                 String
+  prenom              String
+  email               String                     @unique
+  telephone           String?
+  grade               String?
+  specialite          String?
+  etablissement       String?
+  disponible          Boolean                    @default(true)
+  createdAt           DateTime                   @default(now())
+  updatedAt           DateTime                   @updatedAt
+  creneauxPreferences String?
+  heuresMaxJour       Int                        @default(6)
+  heuresMaxSemaine    Int                        @default(20)
+  joursPreferences    String?
+  disponibilites      DisponibiliteIntervenant[]
+  evaluations         EvaluationEnseignement[]
+  modules             Module[]
+  seances             Seance[]
+
+  @@index([email])
+  @@index([disponible])
+  @@map("intervenants")
+}
+
+model DisponibiliteIntervenant {
+  id            String            @id @default(cuid())
+  jourSemaine   Int
+  heureDebut    String
+  heureFin      String
+  type          TypeDisponibilite @default(DISPONIBLE)
+  dateDebut     DateTime?
+  dateFin       DateTime?
+  recurrent     Boolean           @default(true)
+  intervenantId String
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  intervenant   Intervenant       @relation(fields: [intervenantId], references: [id], onDelete: Cascade)
+
+  @@index([intervenantId])
+  @@index([jourSemaine])
+  @@map("disponibilites_intervenants")
+}
+
+model Module {
+  id                 String                   @id @default(cuid())
+  code               String                   @unique
+  name               String
+  description        String?
+  cm                 Int                      @default(0)
+  td                 Int                      @default(0)
+  tp                 Int                      @default(0)
+  tpe                Int                      @default(0)
+  vht                Int
+  coefficient        Int                      @default(1)
+  credits            Int                      @default(1)
+  status             StatusModule             @default(PLANIFIE)
+  progression        Int                      @default(0)
+  dateDebut          DateTime?
+  dateFin            DateTime?
+  programmeId        String
+  intervenantId      String?
+  userId             String
+  createdAt          DateTime                 @default(now())
+  updatedAt          DateTime                 @updatedAt
+  evaluations        EvaluationEnseignement[]
+  intervenant        Intervenant?             @relation(fields: [intervenantId], references: [id])
+  programme          Programme                @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+  user               User                     @relation(fields: [userId], references: [id])
+  resultatsEtudiants ResultatEtudiant[]
+  seances            Seance[]
+
+  @@index([programmeId])
+  @@index([intervenantId])
+  @@index([userId])
+  @@index([code])
+  @@map("modules")
+}
+
+model Salle {
+  id          String   @id @default(cuid())
+  nom         String   @unique
+  batiment    String
+  capacite    Int
+  equipements String?
+  disponible  Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([nom])
+  @@index([disponible])
+  @@map("salles")
+}
+
+model Seance {
+  id                String       @id @default(cuid())
+  dateSeance        DateTime
+  heureDebut        String
+  heureFin          String
+  duree             Int
+  typeSeance        TypeSeance
+  salle             String?
+  batiment          String?
+  status            StatusSeance @default(PLANIFIE)
+  moduleId          String
+  intervenantId     String
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  notes             String?
+  objectifs         String?
+  conflitsAsSeance1 Conflit[]    @relation("ConflitSeance1")
+  conflitsAsSeance2 Conflit[]    @relation("ConflitSeance2")
+  intervenant       Intervenant  @relation(fields: [intervenantId], references: [id])
+  module            Module       @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@index([dateSeance])
+  @@index([intervenantId, dateSeance])
+  @@index([salle, dateSeance])
+  @@index([moduleId])
+  @@index([status])
+  @@map("seances")
+}
+
+model Conflit {
+  id            String          @id @default(cuid())
+  type          TypeConflit
+  description   String
+  seanceId1     String
+  seanceId2     String?
+  ressourceType String
+  ressourceId   String
+  resolu        Boolean         @default(false)
+  resolution    String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  resoluLe      DateTime?
+  resoluPar     String?
+  severite      SeveriteConflit @default(HAUTE)
+  seance1       Seance          @relation("ConflitSeance1", fields: [seanceId1], references: [id], onDelete: Cascade)
+  seance2       Seance?         @relation("ConflitSeance2", fields: [seanceId2], references: [id], onDelete: Cascade)
+
+  @@index([seanceId1])
+  @@index([seanceId2])
+  @@index([resolu])
+  @@index([type])
+  @@index([severite])
+  @@map("conflits")
+}
+
+model PeriodeAcademique {
+  id                     String                 @id @default(cuid())
+  nom                    String
+  annee                  String
+  debutS1                DateTime
+  finS1                  DateTime
+  debutS2                DateTime
+  finS2                  DateTime
+  vacancesNoel           DateTime
+  finVacancesNoel        DateTime
+  vacancesPaques         DateTime?
+  finVacancesPaques      DateTime?
+  active                 Boolean                @default(false)
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime               @updatedAt
+  activitesAcademiques   ActiviteAcademique[]
+  indicateursAcademiques IndicateurAcademique[]
+
+  @@index([active])
+  @@index([annee])
+  @@map("periodes_academiques")
+}
+
+model JournalActivite {
+  id             String     @id @default(cuid())
+  action         ActionType
+  entite         String
+  entiteId       String
+  description    String
+  ancienneValeur String?
+  nouvelleValeur String?
+  userId         String
+  userName       String?
+  ipAddress      String?
+  userAgent      String?
+  createdAt      DateTime   @default(now())
+
+  @@index([userId])
+  @@index([entite, entiteId])
+  @@index([createdAt])
+  @@index([action])
+  @@map("journal_activites")
+}
+
+model ActiviteAcademique {
+  id          String            @id @default(cuid())
+  nom         String
+  description String?
+  datePrevue  DateTime?
+  dateReelle  DateTime?
+  type        String
+  programmeId String
+  periodeId   String
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  periode     PeriodeAcademique @relation(fields: [periodeId], references: [id], onDelete: Cascade)
+  programme   Programme         @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+
+  @@index([programmeId])
+  @@index([periodeId])
+  @@index([type])
+  @@map("activites_academiques")
+}
+
+model IndicateurAcademique {
+  id            String            @id @default(cuid())
+  nom           String
+  description   String?
+  valeurCible   Float?
+  valeurReelle  Float?
+  periodicite   String
+  methodeCalcul String?
+  unite         String            @default("%")
+  type          String
+  programmeId   String
+  periodeId     String
+  responsableId String?
+  dateCollecte  DateTime?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  periode       PeriodeAcademique @relation(fields: [periodeId], references: [id], onDelete: Cascade)
+  programme     Programme         @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+  responsable   User?             @relation(fields: [responsableId], references: [id])
+
+  @@index([programmeId])
+  @@index([periodeId])
+  @@index([type])
+  @@index([responsableId])
+  @@map("indicateurs_academiques")
+}
+
+model ResultatEtudiant {
+  id             String   @id @default(cuid())
+  numeroEtudiant String
+  nomEtudiant    String
+  prenomEtudiant String
+  emailEtudiant  String?
+  moduleId       String
+  noteCC         Float?
+  noteExamen     Float?
+  noteFinale     Float?
+  statut         String
+  mention        String?
+  vhDeroule      Int      @default(0)
+  progressionPct Int      @default(0)
+  presences      Int      @default(0)
+  absences       Int      @default(0)
+  tauxPresence   Float?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  module         Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@unique([numeroEtudiant, moduleId])
+  @@index([moduleId])
+  @@index([numeroEtudiant])
+  @@index([statut])
+  @@map("resultats_etudiants")
+}
+
+model EvaluationEnseignement {
+  id                   String      @id @default(cuid())
+  moduleId             String
+  intervenantId        String
+  dateEnvoi            DateTime?
+  dateDebut            DateTime?
+  dateFin              DateTime?
+  lienEvaluation       String?
+  noteQualiteCours     Float?
+  noteQualitePedagogie Float?
+  noteDisponibilite    Float?
+  noteMoyenne          Float?
+  nombreReponses       Int         @default(0)
+  nombreInvitations    Int         @default(0)
+  tauxParticipation    Float?
+  commentaires         String?
+  statut               StatutCampagne @default(BROUILLON)
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+  intervenant          Intervenant @relation(fields: [intervenantId], references: [id], onDelete: Cascade)
+  module               Module      @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@index([moduleId])
+  @@index([intervenantId])
+  @@index([statut])
+  @@map("evaluations_enseignements")
+}
+
+enum Role {
+  ADMIN
+  COORDINATOR
+  TEACHER
+}
+
+enum Semestre {
+  SEMESTRE_1
+  SEMESTRE_2
+  SEMESTRE_3
+  SEMESTRE_4
+  SEMESTRE_5
+  SEMESTRE_6
+}
+
+enum StatusProgramme {
+  PLANIFIE
+  EN_COURS
+  TERMINE
+  SUSPENDU
+  ANNULE
+}
+
+enum StatusModule {
+  PLANIFIE
+  EN_COURS
+  TERMINE
+  REPORTE
+  ANNULE
+}
+
+enum TypeSeance {
+  CM
+  TD
+  TP
+  EXAMEN
+  RATTRAPAGE
+}
+
+enum StatusSeance {
+  PLANIFIE
+  CONFIRME
+  EN_COURS
+  TERMINE
+  REPORTE
+  ANNULE
+}
+
+enum TypeConflit {
+  INTERVENANT_DOUBLE_BOOKING
+  SALLE_DOUBLE_BOOKING
+  CHEVAUCHEMENT_HORAIRE
+  CONTRAINTE_CALENDAIRE
+  SURCHARGE_INTERVENANT
+  JOUR_NON_OUVRABLE
+}
+
+enum SeveriteConflit {
+  BASSE
+  MOYENNE
+  HAUTE
+  CRITIQUE
+}
+
+enum TypeDisponibilite {
+  DISPONIBLE
+  INDISPONIBLE
+  PREFERENCE
+}
+
+model Notification {
+  id            String           @id @default(cuid())
+  titre         String
+  message       String
+  type          TypeNotification
+  priorite      PrioriteNotification @default(NORMALE)
+  lu            Boolean          @default(false)
+  destinataireId String
+  entite        String?
+  entiteId      String?
+  lienAction    String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@index([destinataireId])
+  @@index([lu])
+  @@index([type])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+enum TypeNotification {
+  MODIFICATION_PLANNING
+  CONFLIT_DETECTE
+  MODULE_SANS_INTERVENANT
+  PROGRAMME_EN_RETARD
+  MODULE_PROCHAIN
+  EVALUATION_DISPONIBLE
+  SYSTEME
+}
+
+enum PrioriteNotification {
+  BASSE
+  NORMALE
+  HAUTE
+  URGENTE
+}
+
+enum StatutCampagne {
+  BROUILLON
+  ENVOYEE
+  EN_COURS
+  TERMINEE
+  ANNULEE
+}
+
+enum ActionType {
+  CREATION
+  MODIFICATION
+  SUPPRESSION
+  CONNEXION
+  DECONNEXION
+  PLANIFICATION_AUTO
+  RESOLUTION_CONFLIT
+  EXPORT_DONNEES
+  ALERTE
+}
+
+// ============================================
+// SYSTÈME DE ROTATION WEEKEND
+// ============================================
+
+model RotationWeekend {
+  id                String              @id @default(cuid())
+  dateDebut         DateTime            // Date du samedi (début du weekend)
+  dateFin           DateTime            // Date du dimanche (fin du weekend)
+  semaineNumero     Int                 // Numéro de la semaine dans l'année
+  annee             Int                 // Année
+  responsableId     String              // User ID du responsable assigné
+  responsable       User                @relation("ResponsableRotation", fields: [responsableId], references: [id])
+  substitutId       String?             // User ID du substitut en cas d'absence
+  substitut         User?               @relation("SubstitutRotation", fields: [substitutId], references: [id])
+  status            StatutRotation      @default(PLANIFIE)
+  nbSeancesTotal    Int                 @default(0)  // Nombre de séances prévues ce weekend
+  nbSeancesRealisees Int               @default(0)  // Nombre de séances effectuées
+  commentaire       String?             // Notes ou commentaires
+  estAbsence        Boolean             @default(false) // True si remplacement pour absence
+  notificationEnvoyee Boolean           @default(false) // Notification 7j envoyée
+  rappelEnvoye      Boolean             @default(false) // Rappel 48h envoyé
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  createdBy         String?             // User qui a créé/modifié
+  rapportSupervision RapportSupervision?
+
+  @@unique([dateDebut, responsableId])
+  @@index([responsableId])
+  @@index([dateDebut])
+  @@index([status])
+  @@index([semaineNumero, annee])
+  @@map("rotations_weekend")
+}
+
+model DisponibiliteResponsable {
+  id             String   @id @default(cuid())
+  responsableId  String   // User ID
+  responsable    User     @relation("DisponibilitesResponsable", fields: [responsableId], references: [id], onDelete: Cascade)
+  dateDebut      DateTime // Date du weekend
+  dateFin        DateTime
+  disponible     Boolean  @default(true) // False = indisponible
+  raison         String?  // Raison de l'indisponibilité
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([responsableId])
+  @@index([dateDebut])
+  @@map("disponibilites_responsables")
+}
+
+model RapportSupervision {
+  id                String          @id @default(cuid())
+  rotationId        String          @unique
+  rotation          RotationWeekend @relation(fields: [rotationId], references: [id], onDelete: Cascade)
+  heureArrivee      String?         // Heure d'arrivée du responsable
+  heureDepart       String?         // Heure de départ
+  nbSeancesVisitees Int             @default(0)
+  incidents         String?         // Description des incidents
+  observations      String?         // Observations générales
+  recommandations   String?         // Recommandations
+  satisfaction      Int?            // Note de satisfaction /5
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@index([rotationId])
+  @@map("rapports_supervision")
+}
+
+model StatistiqueRotation {
+  id                    String   @id @default(cuid())
+  responsableId         String   // User ID
+  annee                 Int
+  mois                  Int?     // Si null = stats annuelles
+  nbWeekendTotal        Int      @default(0)
+  nbWeekendRealises     Int      @default(0)
+  nbWeekendAbsences     Int      @default(0)
+  nbWeekendSubstitut    Int      @default(0) // Nombre de fois en tant que substitut
+  tauxPresence          Float    @default(0) // Pourcentage
+  nbSeancesTotal        Int      @default(0)
+  moyenneSatisfaction   Float?   // Moyenne des notes de satisfaction
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@unique([responsableId, annee, mois])
+  @@index([responsableId])
+  @@index([annee])
+  @@map("statistiques_rotation")
+}
+
+enum StatutRotation {
+  PLANIFIE          // Weekend planifié à l'avance
+  CONFIRME          // Responsable a confirmé sa présence
+  EN_COURS          // Weekend en cours
+  TERMINE           // Weekend terminé (avec rapport)
+  TERMINE_SANS_RAPPORT // Weekend terminé sans rapport
+  ABSENT            // Responsable absent (remplacé)
+  ANNULE            // Rotation annulée
+}
