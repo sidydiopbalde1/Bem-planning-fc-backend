@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateActiviteAcademiqueDto } from './dto/create-activite-academique.dto';
 import { UpdateActiviteAcademiqueDto } from './dto/update-activite-academique.dto';
@@ -8,7 +9,7 @@ export class ActivitesAcademiquesService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAll(programmeId?: string, periodeId?: string) {
-    const where: any = {};
+    const where: Prisma.ActiviteAcademiqueWhereInput = {};
 
     if (programmeId) where.programmeId = programmeId;
     if (periodeId) where.periodeId = periodeId;
@@ -72,15 +73,24 @@ export class ActivitesAcademiquesService {
   async update(id: string, data: UpdateActiviteAcademiqueDto) {
     await this.findOne(id);
 
-    const updateData: any = {};
+    const updateData: Prisma.ActiviteAcademiqueUpdateInput = {};
 
     if (data.nom !== undefined) updateData.nom = data.nom;
-    if (data.description !== undefined) updateData.description = data.description;
-    if (data.datePrevue !== undefined) updateData.datePrevue = data.datePrevue ? new Date(data.datePrevue) : null;
-    if (data.dateReelle !== undefined) updateData.dateReelle = data.dateReelle ? new Date(data.dateReelle) : null;
+    if (data.description !== undefined)
+      updateData.description = data.description;
+    if (data.datePrevue !== undefined)
+      updateData.datePrevue = data.datePrevue
+        ? new Date(data.datePrevue)
+        : null;
+    if (data.dateReelle !== undefined)
+      updateData.dateReelle = data.dateReelle
+        ? new Date(data.dateReelle)
+        : null;
     if (data.type !== undefined) updateData.type = data.type;
-    if (data.programmeId !== undefined) updateData.programmeId = data.programmeId;
-    if (data.periodeId !== undefined) updateData.periodeId = data.periodeId;
+    if (data.programmeId !== undefined)
+      updateData.programme = { connect: { id: data.programmeId } };
+    if (data.periodeId !== undefined)
+      updateData.periode = { connect: { id: data.periodeId } };
 
     return this.prisma.activiteAcademique.update({
       where: { id },

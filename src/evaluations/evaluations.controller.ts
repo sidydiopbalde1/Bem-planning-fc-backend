@@ -9,7 +9,13 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
-import { EvaluationsService } from './evaluations.service';
+import { StatutCampagne } from '@prisma/client';
+import {
+  EvaluationsService,
+  CreateEvaluationDto,
+  UpdateEvaluationDto,
+  SubmitResponseDto,
+} from './evaluations.service';
 import { Roles, Public, CurrentUser } from '../common/decorators';
 import { Role } from '../common/constants/roles.constant';
 import { PaginationDto } from '../common/dto';
@@ -27,7 +33,7 @@ export class EvaluationsController {
   findAll(
     @Query() pagination: PaginationDto,
     @Query('moduleId') moduleId?: string,
-    @Query('statut') statut?: string,
+    @Query('statut') statut?: StatutCampagne,
   ) {
     return this.evaluationsService.findAll(pagination, { moduleId, statut });
   }
@@ -42,14 +48,21 @@ export class EvaluationsController {
   @Post()
   @Roles(Role.ADMIN, Role.COORDINATOR)
   @ApiOperation({ summary: 'Créer une évaluation' })
-  create(@Body() data: any, @CurrentUser() user: AuthenticatedUser) {
+  create(
+    @Body() data: CreateEvaluationDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
     return this.evaluationsService.create(data, user.id, user.name);
   }
 
   @Put(':id')
   @Roles(Role.ADMIN, Role.COORDINATOR)
   @ApiOperation({ summary: 'Mettre à jour une évaluation' })
-  update(@Param('id') id: string, @Body() data: any, @CurrentUser() user: AuthenticatedUser) {
+  update(
+    @Param('id') id: string,
+    @Body() data: UpdateEvaluationDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
     return this.evaluationsService.update(id, data, user.id, user.name);
   }
 
@@ -70,8 +83,11 @@ export class EvaluationsController {
 
   @Public()
   @Post('public/:lien/submit')
-  @ApiOperation({ summary: 'Soumettre une réponse d\'évaluation (public)' })
-  submitResponse(@Param('lien') lien: string, @Body() responses: any) {
+  @ApiOperation({ summary: "Soumettre une réponse d'évaluation (public)" })
+  submitResponse(
+    @Param('lien') lien: string,
+    @Body() responses: SubmitResponseDto,
+  ) {
     return this.evaluationsService.submitResponse(lien, responses);
   }
 }

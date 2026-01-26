@@ -2,22 +2,51 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 
+interface ProgrammeEmailData {
+  name: string;
+  code: string;
+  progression: number;
+  dateFin: string | Date;
+}
+
+interface CoordinateurEmailData {
+  name: string | null;
+}
+
+interface ModuleEmailData {
+  name: string;
+  code: string;
+  dateDebut: string | Date;
+}
+
+interface SeanceEmailData {
+  dateSeance: string | Date;
+  heureDebut: string;
+  heureFin: string;
+  module?: { name: string };
+}
+
+interface IntervenantEmailData {
+  prenom: string;
+  nom: string;
+}
+
 @Injectable()
 export class EmailService {
   private readonly logger = new Logger(EmailService.name);
   private transporter: nodemailer.Transporter;
 
   constructor(private configService: ConfigService) {
-    const host = this.configService.get('email.host');
+    const host = this.configService.get<string>('email.host');
 
     if (host) {
       this.transporter = nodemailer.createTransport({
         host,
-        port: this.configService.get('email.port'),
-        secure: this.configService.get('email.secure'),
+        port: this.configService.get<number>('email.port'),
+        secure: this.configService.get<boolean>('email.secure'),
         auth: {
-          user: this.configService.get('email.user'),
-          pass: this.configService.get('email.password'),
+          user: this.configService.get<string>('email.user'),
+          pass: this.configService.get<string>('email.password'),
         },
       });
     }
@@ -36,23 +65,27 @@ export class EmailService {
 
     try {
       await this.transporter.sendMail({
-        from: this.configService.get('email.from'),
+        from: this.configService.get<string>('email.from'),
         ...options,
       });
       this.logger.log(`Email envoyé à ${options.to}`);
       return true;
     } catch (error) {
-      this.logger.error(`Erreur envoi email: ${error.message}`);
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      this.logger.error(`Erreur envoi email: ${message}`);
       return false;
     }
   }
 
   // Templates
-  programmeEnRetardTemplate(programme: any, coordinateur: any): string {
+  programmeEnRetardTemplate(
+    programme: ProgrammeEmailData,
+    coordinateur: CoordinateurEmailData,
+  ): string {
     return `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #e74c3c;">Programme en retard</h2>
-        <p>Bonjour ${coordinateur.name},</p>
+        <p>Bonjour ${coordinateur.name ?? 'Coordinateur'},</p>
         <p>Le programme <strong>${programme.name}</strong> (${programme.code}) est en retard.</p>
         <ul>
           <li>Progression: ${programme.progression}%</li>
@@ -63,7 +96,10 @@ export class EmailService {
     `;
   }
 
-  moduleSansIntervenantTemplate(module: any, programme: any): string {
+  moduleSansIntervenantTemplate(
+    module: ModuleEmailData,
+    programme: { name: string },
+  ): string {
     return `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #f39c12;">Module sans intervenant</h2>
@@ -73,7 +109,10 @@ export class EmailService {
     `;
   }
 
-  seanceNonTermineeTemplate(seance: any, intervenant: any): string {
+  seanceNonTermineeTemplate(
+    seance: SeanceEmailData,
+    intervenant: IntervenantEmailData,
+  ): string {
     return `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #f39c12;">Séance non terminée</h2>

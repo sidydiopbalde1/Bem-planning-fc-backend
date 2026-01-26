@@ -1,8 +1,38 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma, StatutCampagne } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { JournalService } from '../journal/journal.service';
 import { PaginationDto } from '../common/dto';
 import * as crypto from 'crypto';
+
+export interface EvaluationFilters {
+  moduleId?: string;
+  statut?: StatutCampagne;
+}
+
+export class CreateEvaluationDto {
+  moduleId: string;
+  intervenantId: string;
+  dateDebut: string;
+  dateFin: string;
+  nombreInvitations?: number;
+}
+
+export class UpdateEvaluationDto {
+  moduleId?: string;
+  intervenantId?: string;
+  dateDebut?: string;
+  dateFin?: string;
+  nombreInvitations?: number;
+  statut?: StatutCampagne;
+}
+
+export class SubmitResponseDto {
+  noteQualiteCours?: number;
+  noteQualitePedagogie?: number;
+  noteDisponibilite?: number;
+  commentaires?: string;
+}
 
 @Injectable()
 export class EvaluationsService {
@@ -11,9 +41,9 @@ export class EvaluationsService {
     private journalService: JournalService,
   ) {}
 
-  async findAll(pagination: PaginationDto, filters: any) {
+  async findAll(pagination: PaginationDto, filters: EvaluationFilters) {
     const { skip, take, sortBy, sortOrder } = pagination;
-    const where: any = {};
+    const where: Prisma.EvaluationEnseignementWhereInput = {};
 
     if (filters.moduleId) where.moduleId = filters.moduleId;
     if (filters.statut) where.statut = filters.statut;
@@ -29,7 +59,9 @@ export class EvaluationsService {
               programme: { select: { id: true, name: true, code: true } },
             },
           },
-          intervenant: { select: { id: true, civilite: true, nom: true, prenom: true } },
+          intervenant: {
+            select: { id: true, civilite: true, nom: true, prenom: true },
+          },
         },
         orderBy: sortBy ? { [sortBy]: sortOrder } : { createdAt: 'desc' },
       }),
@@ -81,13 +113,11 @@ export class EvaluationsService {
     return evaluation;
   }
 
-  async create(data: {
-    moduleId: string;
-    intervenantId: string;
-    dateDebut: string;
-    dateFin: string;
-    nombreInvitations?: number;
-  }, currentUserId?: string, currentUserName?: string) {
+  async create(
+    data: CreateEvaluationDto,
+    currentUserId?: string,
+    currentUserName?: string,
+  ) {
     const lienEvaluation = crypto.randomBytes(32).toString('hex');
 
     const evaluation = await this.prisma.evaluationEnseignement.create({
@@ -111,7 +141,12 @@ export class EvaluationsService {
       entite: 'Evaluation',
       entiteId: evaluation.id,
       description: `Création d'une évaluation pour le module ${evaluation.module.code}`,
-      nouvelleValeur: { moduleId: data.moduleId, intervenantId: data.intervenantId, dateDebut: data.dateDebut, dateFin: data.dateFin },
+      nouvelleValeur: {
+        moduleId: data.moduleId,
+        intervenantId: data.intervenantId,
+        dateDebut: data.dateDebut,
+        dateFin: data.dateFin,
+      },
       userId: currentUserId,
       userName: currentUserName,
     });
@@ -119,16 +154,30 @@ export class EvaluationsService {
     return evaluation;
   }
 
-  async update(id: string, data: any, currentUserId?: string, currentUserName?: string) {
+  async update(
+    id: string,
+    data: UpdateEvaluationDto,
+    currentUserId?: string,
+    currentUserName?: string,
+  ) {
     const oldEvaluation = await this.findOne(id);
+
+    const updateData: Prisma.EvaluationEnseignementUpdateInput = {
+      ...(data.moduleId && { module: { connect: { id: data.moduleId } } }),
+      ...(data.intervenantId && {
+        intervenant: { connect: { id: data.intervenantId } },
+      }),
+      ...(data.nombreInvitations !== undefined && {
+        nombreInvitations: data.nombreInvitations,
+      }),
+      ...(data.statut && { statut: data.statut }),
+      ...(data.dateDebut && { dateDebut: new Date(data.dateDebut) }),
+      ...(data.dateFin && { dateFin: new Date(data.dateFin) }),
+    };
 
     const updatedEvaluation = await this.prisma.evaluationEnseignement.update({
       where: { id },
-      data: {
-        ...data,
-        ...(data.dateDebut && { dateDebut: new Date(data.dateDebut) }),
-        ...(data.dateFin && { dateFin: new Date(data.dateFin) }),
-      },
+      data: updateData,
     });
 
     await this.journalService.log({
@@ -145,8 +194,7 @@ export class EvaluationsService {
     return updatedEvaluation;
   }
 
-
-  async submitResponse(lienEvaluation: string, responses: any) {
+  async submitResponse(lienEvaluation: string, responses: SubmitResponseDto) {
     const evaluation = await this.findByLien(lienEvaluation);
 
     // Mettre à jour les notes
@@ -181,7 +229,10 @@ export class EvaluationsService {
       entite: 'Evaluation',
       entiteId: id,
       description: `Suppression de l'évaluation pour le module ${evaluation.module.code}`,
-      ancienneValeur: { moduleId: evaluation.moduleId, intervenantId: evaluation.intervenantId },
+      ancienneValeur: {
+        moduleId: evaluation.moduleId,
+        intervenantId: evaluation.intervenantId,
+      },
       userId: currentUserId,
       userName: currentUserName,
     });
