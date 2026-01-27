@@ -17,7 +17,8 @@ async function bootstrap() {
     app.enableCors({
         origin: [
             "http://localhost:3000",
-            "https://bem-planning-fc-frontend-latest3.onrender.com"
+            "https://bem-planning-fc-frontend-latest3.onrender.com",
+            "https://bem-planning-fc-frontend-latest3-1.onrender.com"
         ],
         credentials: true,
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
