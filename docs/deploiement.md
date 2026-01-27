@@ -51,4 +51,11 @@
 
 
   sudo docker build --network=host -t bem-planning-api .
+
+  renommer image
+  sudo docker tag bem-planning-api sidydiopbalde/bem_planning_fc_backend:latest
+
+  #push l'image
+  sudo docker push sidydiopbalde/bem_planning_fc_backend:latest
+
   https://bem-planning-fc-backend-latest.onrender.com/api/docs#/users/UsersController_findAll

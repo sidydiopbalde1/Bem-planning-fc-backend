@@ -82,15 +82,19 @@ let ActivitesAcademiquesService = class ActivitesAcademiquesService {
         if (data.description !== undefined)
             updateData.description = data.description;
         if (data.datePrevue !== undefined)
-            updateData.datePrevue = data.datePrevue ? new Date(data.datePrevue) : null;
+            updateData.datePrevue = data.datePrevue
+                ? new Date(data.datePrevue)
+                : null;
         if (data.dateReelle !== undefined)
-            updateData.dateReelle = data.dateReelle ? new Date(data.dateReelle) : null;
+            updateData.dateReelle = data.dateReelle
+                ? new Date(data.dateReelle)
+                : null;
         if (data.type !== undefined)
             updateData.type = data.type;
         if (data.programmeId !== undefined)
-            updateData.programmeId = data.programmeId;
+            updateData.programme = { connect: { id: data.programmeId } };
         if (data.periodeId !== undefined)
-            updateData.periodeId = data.periodeId;
+            updateData.periode = { connect: { id: data.periodeId } };
         return this.prisma.activiteAcademique.update({
             where: { id },
             data: updateData,

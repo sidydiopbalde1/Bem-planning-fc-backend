@@ -42,11 +42,35 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EvaluationsService = void 0;
+exports.EvaluationsService = exports.SubmitResponseDto = exports.UpdateEvaluationDto = exports.CreateEvaluationDto = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
 const journal_service_1 = require("../journal/journal.service");
 const crypto = __importStar(require("crypto"));
+class CreateEvaluationDto {
+    moduleId;
+    intervenantId;
+    dateDebut;
+    dateFin;
+    nombreInvitations;
+}
+exports.CreateEvaluationDto = CreateEvaluationDto;
+class UpdateEvaluationDto {
+    moduleId;
+    intervenantId;
+    dateDebut;
+    dateFin;
+    nombreInvitations;
+    statut;
+}
+exports.UpdateEvaluationDto = UpdateEvaluationDto;
+class SubmitResponseDto {
+    noteQualiteCours;
+    noteQualitePedagogie;
+    noteDisponibilite;
+    commentaires;
+}
+exports.SubmitResponseDto = SubmitResponseDto;
 let EvaluationsService = class EvaluationsService {
     prisma;
     journalService;
@@ -72,7 +96,9 @@ let EvaluationsService = class EvaluationsService {
                             programme: { select: { id: true, name: true, code: true } },
                         },
                     },
-                    intervenant: { select: { id: true, civilite: true, nom: true, prenom: true } },
+                    intervenant: {
+                        select: { id: true, civilite: true, nom: true, prenom: true },
+                    },
                 },
                 orderBy: sortBy ? { [sortBy]: sortOrder } : { createdAt: 'desc' },
             }),
@@ -137,7 +163,12 @@ let EvaluationsService = class EvaluationsService {
             entite: 'Evaluation',
             entiteId: evaluation.id,
             description: `Création d'une évaluation pour le module ${evaluation.module.code}`,
-            nouvelleValeur: { moduleId: data.moduleId, intervenantId: data.intervenantId, dateDebut: data.dateDebut, dateFin: data.dateFin },
+            nouvelleValeur: {
+                moduleId: data.moduleId,
+                intervenantId: data.intervenantId,
+                dateDebut: data.dateDebut,
+                dateFin: data.dateFin,
+            },
             userId: currentUserId,
             userName: currentUserName,
         });
@@ -145,13 +176,21 @@ let EvaluationsService = class EvaluationsService {
     }
     async update(id, data, currentUserId, currentUserName) {
         const oldEvaluation = await this.findOne(id);
+        const updateData = {
+            ...(data.moduleId && { module: { connect: { id: data.moduleId } } }),
+            ...(data.intervenantId && {
+                intervenant: { connect: { id: data.intervenantId } },
+            }),
+            ...(data.nombreInvitations !== undefined && {
+                nombreInvitations: data.nombreInvitations,
+            }),
+            ...(data.statut && { statut: data.statut }),
+            ...(data.dateDebut && { dateDebut: new Date(data.dateDebut) }),
+            ...(data.dateFin && { dateFin: new Date(data.dateFin) }),
+        };
         const updatedEvaluation = await this.prisma.evaluationEnseignement.update({
             where: { id },
-            data: {
-                ...data,
-                ...(data.dateDebut && { dateDebut: new Date(data.dateDebut) }),
-                ...(data.dateFin && { dateFin: new Date(data.dateFin) }),
-            },
+            data: updateData,
         });
         await this.journalService.log({
             action: 'MODIFICATION',
@@ -194,7 +233,10 @@ let EvaluationsService = class EvaluationsService {
             entite: 'Evaluation',
             entiteId: id,
             description: `Suppression de l'évaluation pour le module ${evaluation.module.code}`,
-            ancienneValeur: { moduleId: evaluation.moduleId, intervenantId: evaluation.intervenantId },
+            ancienneValeur: {
+                moduleId: evaluation.moduleId,
+                intervenantId: evaluation.intervenantId,
+            },
             userId: currentUserId,
             userName: currentUserName,
         });

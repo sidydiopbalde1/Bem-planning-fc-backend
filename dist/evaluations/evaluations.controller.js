@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EvaluationsController = void 0;
 const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
+const client_1 = require("@prisma/client");
 const evaluations_service_1 = require("./evaluations.service");
 const decorators_1 = require("../common/decorators");
 const roles_constant_1 = require("../common/constants/roles.constant");
@@ -74,7 +75,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __param(1, (0, decorators_1.CurrentUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [evaluations_service_1.CreateEvaluationDto, Object]),
     __metadata("design:returntype", void 0)
 ], EvaluationsController.prototype, "create", null);
 __decorate([
@@ -85,7 +86,7 @@ __decorate([
     __param(1, (0, common_1.Body)()),
     __param(2, (0, decorators_1.CurrentUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object, Object]),
+    __metadata("design:paramtypes", [String, evaluations_service_1.UpdateEvaluationDto, Object]),
     __metadata("design:returntype", void 0)
 ], EvaluationsController.prototype, "update", null);
 __decorate([
@@ -110,11 +111,11 @@ __decorate([
 __decorate([
     (0, decorators_1.Public)(),
     (0, common_1.Post)('public/:lien/submit'),
-    (0, swagger_1.ApiOperation)({ summary: 'Soumettre une réponse d\'évaluation (public)' }),
+    (0, swagger_1.ApiOperation)({ summary: "Soumettre une réponse d'évaluation (public)" }),
     __param(0, (0, common_1.Param)('lien')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [String, evaluations_service_1.SubmitResponseDto]),
     __metadata("design:returntype", void 0)
 ], EvaluationsController.prototype, "submitResponse", null);
 exports.EvaluationsController = EvaluationsController = __decorate([

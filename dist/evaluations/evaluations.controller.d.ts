@@ -1,10 +1,11 @@
-import { EvaluationsService } from './evaluations.service';
+import { StatutCampagne } from '@prisma/client';
+import { EvaluationsService, CreateEvaluationDto, UpdateEvaluationDto, SubmitResponseDto } from './evaluations.service';
 import { PaginationDto } from '../common/dto';
 import type { AuthenticatedUser } from '../auth/interfaces/jwt-payload.interface';
 export declare class EvaluationsController {
     private readonly evaluationsService;
     constructor(evaluationsService: EvaluationsService);
-    findAll(pagination: PaginationDto, moduleId?: string, statut?: string): Promise<{
+    findAll(pagination: PaginationDto, moduleId?: string, statut?: StatutCampagne): Promise<{
         data: ({
             intervenant: {
                 id: string;
@@ -19,9 +20,9 @@ export declare class EvaluationsController {
                     code: string;
                 };
             } & {
+                id: string;
                 description: string | null;
                 userId: string;
-                id: string;
                 createdAt: Date;
                 name: string;
                 updatedAt: Date;
@@ -88,9 +89,9 @@ export declare class EvaluationsController {
         };
         module: {
             programme: {
+                id: string;
                 description: string | null;
                 userId: string;
-                id: string;
                 createdAt: Date;
                 name: string;
                 updatedAt: Date;
@@ -104,9 +105,9 @@ export declare class EvaluationsController {
                 totalVHT: number;
             };
         } & {
+            id: string;
             description: string | null;
             userId: string;
-            id: string;
             createdAt: Date;
             name: string;
             updatedAt: Date;
@@ -145,7 +146,7 @@ export declare class EvaluationsController {
         commentaires: string | null;
         statut: import(".prisma/client").$Enums.StatutCampagne;
     }>;
-    create(data: any, user: AuthenticatedUser): Promise<{
+    create(data: CreateEvaluationDto, user: AuthenticatedUser): Promise<{
         intervenant: {
             id: string;
             createdAt: Date;
@@ -165,9 +166,9 @@ export declare class EvaluationsController {
             joursPreferences: string | null;
         };
         module: {
+            id: string;
             description: string | null;
             userId: string;
-            id: string;
             createdAt: Date;
             name: string;
             updatedAt: Date;
@@ -206,7 +207,7 @@ export declare class EvaluationsController {
         commentaires: string | null;
         statut: import(".prisma/client").$Enums.StatutCampagne;
     }>;
-    update(id: string, data: any, user: AuthenticatedUser): Promise<{
+    update(id: string, data: UpdateEvaluationDto, user: AuthenticatedUser): Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;
@@ -237,9 +238,9 @@ export declare class EvaluationsController {
         };
         module: {
             programme: {
+                id: string;
                 description: string | null;
                 userId: string;
-                id: string;
                 createdAt: Date;
                 name: string;
                 updatedAt: Date;
@@ -253,9 +254,9 @@ export declare class EvaluationsController {
                 totalVHT: number;
             };
         } & {
+            id: string;
             description: string | null;
             userId: string;
-            id: string;
             createdAt: Date;
             name: string;
             updatedAt: Date;
@@ -294,7 +295,7 @@ export declare class EvaluationsController {
         commentaires: string | null;
         statut: import(".prisma/client").$Enums.StatutCampagne;
     }>;
-    submitResponse(lien: string, responses: any): Promise<{
+    submitResponse(lien: string, responses: SubmitResponseDto): Promise<{
         message: string;
         evaluation: {
             id: string;

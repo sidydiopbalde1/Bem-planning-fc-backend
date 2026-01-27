@@ -17,9 +17,9 @@ export declare class PlanningController {
     }>;
     generateAutoPlanning(data: any, user: AuthenticatedUser): Promise<{
         module: {
+            id: string;
             description: string | null;
             userId: string;
-            id: string;
             createdAt: Date;
             name: string;
             updatedAt: Date;

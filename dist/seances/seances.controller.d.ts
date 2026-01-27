@@ -20,9 +20,9 @@ export declare class SeancesController {
                     code: string;
                 };
             } & {
+                id: string;
                 description: string | null;
                 userId: string;
-                id: string;
                 createdAt: Date;
                 name: string;
                 updatedAt: Date;
@@ -42,7 +42,6 @@ export declare class SeancesController {
                 intervenantId: string | null;
             };
         } & {
-            salle: string | null;
             id: string;
             createdAt: Date;
             updatedAt: Date;
@@ -53,6 +52,7 @@ export declare class SeancesController {
             heureFin: string;
             duree: number;
             typeSeance: import(".prisma/client").$Enums.TypeSeance;
+            salle: string | null;
             batiment: string | null;
             moduleId: string;
             notes: string | null;
@@ -86,9 +86,9 @@ export declare class SeancesController {
         };
         module: {
             programme: {
+                id: string;
                 description: string | null;
                 userId: string;
-                id: string;
                 createdAt: Date;
                 name: string;
                 updatedAt: Date;
@@ -102,9 +102,9 @@ export declare class SeancesController {
                 totalVHT: number;
             };
         } & {
+            id: string;
             description: string | null;
             userId: string;
-            id: string;
             createdAt: Date;
             name: string;
             updatedAt: Date;
@@ -124,7 +124,6 @@ export declare class SeancesController {
             intervenantId: string | null;
         };
     } & {
-        salle: string | null;
         id: string;
         createdAt: Date;
         updatedAt: Date;
@@ -135,6 +134,7 @@ export declare class SeancesController {
         heureFin: string;
         duree: number;
         typeSeance: import(".prisma/client").$Enums.TypeSeance;
+        salle: string | null;
         batiment: string | null;
         moduleId: string;
         notes: string | null;
@@ -160,9 +160,9 @@ export declare class SeancesController {
             joursPreferences: string | null;
         };
         module: {
+            id: string;
             description: string | null;
             userId: string;
-            id: string;
             createdAt: Date;
             name: string;
             updatedAt: Date;
@@ -182,7 +182,6 @@ export declare class SeancesController {
             intervenantId: string | null;
         };
     } & {
-        salle: string | null;
         id: string;
         createdAt: Date;
         updatedAt: Date;
@@ -193,6 +192,7 @@ export declare class SeancesController {
         heureFin: string;
         duree: number;
         typeSeance: import(".prisma/client").$Enums.TypeSeance;
+        salle: string | null;
         batiment: string | null;
         moduleId: string;
         notes: string | null;
@@ -218,9 +218,9 @@ export declare class SeancesController {
             joursPreferences: string | null;
         };
         module: {
+            id: string;
             description: string | null;
             userId: string;
-            id: string;
             createdAt: Date;
             name: string;
             updatedAt: Date;
@@ -240,7 +240,6 @@ export declare class SeancesController {
             intervenantId: string | null;
         };
     } & {
-        salle: string | null;
         id: string;
         createdAt: Date;
         updatedAt: Date;
@@ -251,6 +250,7 @@ export declare class SeancesController {
         heureFin: string;
         duree: number;
         typeSeance: import(".prisma/client").$Enums.TypeSeance;
+        salle: string | null;
         batiment: string | null;
         moduleId: string;
         notes: string | null;
@@ -260,7 +260,6 @@ export declare class SeancesController {
         notes?: string;
         realDuration?: number;
     }, user: AuthenticatedUser): Promise<{
-        salle: string | null;
         id: string;
         createdAt: Date;
         updatedAt: Date;
@@ -271,6 +270,7 @@ export declare class SeancesController {
         heureFin: string;
         duree: number;
         typeSeance: import(".prisma/client").$Enums.TypeSeance;
+        salle: string | null;
         batiment: string | null;
         moduleId: string;
         notes: string | null;

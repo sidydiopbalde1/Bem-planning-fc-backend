@@ -1,11 +1,37 @@
+import { StatutCampagne } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { JournalService } from '../journal/journal.service';
 import { PaginationDto } from '../common/dto';
+export interface EvaluationFilters {
+    moduleId?: string;
+    statut?: StatutCampagne;
+}
+export declare class CreateEvaluationDto {
+    moduleId: string;
+    intervenantId: string;
+    dateDebut: string;
+    dateFin: string;
+    nombreInvitations?: number;
+}
+export declare class UpdateEvaluationDto {
+    moduleId?: string;
+    intervenantId?: string;
+    dateDebut?: string;
+    dateFin?: string;
+    nombreInvitations?: number;
+    statut?: StatutCampagne;
+}
+export declare class SubmitResponseDto {
+    noteQualiteCours?: number;
+    noteQualitePedagogie?: number;
+    noteDisponibilite?: number;
+    commentaires?: string;
+}
 export declare class EvaluationsService {
     private prisma;
     private journalService;
     constructor(prisma: PrismaService, journalService: JournalService);
-    findAll(pagination: PaginationDto, filters: any): Promise<{
+    findAll(pagination: PaginationDto, filters: EvaluationFilters): Promise<{
         data: ({
             intervenant: {
                 id: string;
@@ -20,9 +46,9 @@ export declare class EvaluationsService {
                     code: string;
                 };
             } & {
+                id: string;
                 description: string | null;
                 userId: string;
-                id: string;
                 createdAt: Date;
                 name: string;
                 updatedAt: Date;
@@ -89,9 +115,9 @@ export declare class EvaluationsService {
         };
         module: {
             programme: {
+                id: string;
                 description: string | null;
                 userId: string;
-                id: string;
                 createdAt: Date;
                 name: string;
                 updatedAt: Date;
@@ -105,9 +131,9 @@ export declare class EvaluationsService {
                 totalVHT: number;
             };
         } & {
+            id: string;
             description: string | null;
             userId: string;
-            id: string;
             createdAt: Date;
             name: string;
             updatedAt: Date;
@@ -154,9 +180,9 @@ export declare class EvaluationsService {
         };
         module: {
             programme: {
+                id: string;
                 description: string | null;
                 userId: string;
-                id: string;
                 createdAt: Date;
                 name: string;
                 updatedAt: Date;
@@ -170,9 +196,9 @@ export declare class EvaluationsService {
                 totalVHT: number;
             };
         } & {
+            id: string;
             description: string | null;
             userId: string;
-            id: string;
             createdAt: Date;
             name: string;
             updatedAt: Date;
@@ -211,13 +237,7 @@ export declare class EvaluationsService {
         commentaires: string | null;
         statut: import(".prisma/client").$Enums.StatutCampagne;
     }>;
-    create(data: {
-        moduleId: string;
-        intervenantId: string;
-        dateDebut: string;
-        dateFin: string;
-        nombreInvitations?: number;
-    }, currentUserId?: string, currentUserName?: string): Promise<{
+    create(data: CreateEvaluationDto, currentUserId?: string, currentUserName?: string): Promise<{
         intervenant: {
             id: string;
             createdAt: Date;
@@ -237,9 +257,9 @@ export declare class EvaluationsService {
             joursPreferences: string | null;
         };
         module: {
+            id: string;
             description: string | null;
             userId: string;
-            id: string;
             createdAt: Date;
             name: string;
             updatedAt: Date;
@@ -278,7 +298,7 @@ export declare class EvaluationsService {
         commentaires: string | null;
         statut: import(".prisma/client").$Enums.StatutCampagne;
     }>;
-    update(id: string, data: any, currentUserId?: string, currentUserName?: string): Promise<{
+    update(id: string, data: UpdateEvaluationDto, currentUserId?: string, currentUserName?: string): Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;
@@ -298,7 +318,7 @@ export declare class EvaluationsService {
         commentaires: string | null;
         statut: import(".prisma/client").$Enums.StatutCampagne;
     }>;
-    submitResponse(lienEvaluation: string, responses: any): Promise<{
+    submitResponse(lienEvaluation: string, responses: SubmitResponseDto): Promise<{
         message: string;
         evaluation: {
             id: string;

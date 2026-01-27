@@ -80,7 +80,8 @@ let EmailService = EmailService_1 = class EmailService {
             return true;
         }
         catch (error) {
-            this.logger.error(`Erreur envoi email: ${error.message}`);
+            const message = error instanceof Error ? error.message : 'Unknown error';
+            this.logger.error(`Erreur envoi email: ${message}`);
             return false;
         }
     }
@@ -88,7 +89,7 @@ let EmailService = EmailService_1 = class EmailService {
         return `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #e74c3c;">Programme en retard</h2>
-        <p>Bonjour ${coordinateur.name},</p>
+        <p>Bonjour ${coordinateur.name ?? 'Coordinateur'},</p>
         <p>Le programme <strong>${programme.name}</strong> (${programme.code}) est en retard.</p>
         <ul>
           <li>Progression: ${programme.progression}%</li>
