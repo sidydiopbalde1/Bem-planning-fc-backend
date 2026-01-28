@@ -32,6 +32,6 @@ export default () => ({
   },
 
   frontend: {
-    url: process.env.FRONTEND_URL || 'http://localhost:3000',
+    url: process.env.FRONTEND_URL || 'https://bem-planning-fc-frontend-latest5.onrender.com',
   },
 });

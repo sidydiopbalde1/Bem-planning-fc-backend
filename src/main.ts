@@ -18,15 +18,13 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   // CORS
-  app.enableCors({
-    origin: [
-      "http://localhost:3000",
-      "https://bem-planning-fc-frontend-latest3.onrender.com",
-      "https://bem-planning-fc-frontend-latest4-1.onrender.com"],
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  });
+app.enableCors({
+  origin: true, // ✅ accepte toutes les origines
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+});
+
 
   // Global pipes
   app.useGlobalPipes(
