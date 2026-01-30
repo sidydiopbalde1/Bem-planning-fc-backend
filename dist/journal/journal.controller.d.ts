@@ -5,15 +5,15 @@ export declare class JournalController {
     constructor(journalService: JournalService);
     findAll(query: QueryJournalDto): Promise<{
         logs: {
-            id: string;
+            description: string;
             action: import(".prisma/client").$Enums.ActionType;
             entite: string;
             entiteId: string;
-            description: string;
-            ancienneValeur: string | null;
-            nouvelleValeur: string | null;
             userId: string;
             userName: string | null;
+            id: string;
+            ancienneValeur: string | null;
+            nouvelleValeur: string | null;
             ipAddress: string | null;
             userAgent: string | null;
             createdAt: Date;
@@ -50,39 +50,39 @@ export declare class JournalController {
             count: number;
         }[];
         activiteRecente: {
-            id: string;
+            description: string;
             action: import(".prisma/client").$Enums.ActionType;
             entite: string;
-            description: string;
             userName: string | null;
+            id: string;
             createdAt: Date;
         }[];
     }>;
     getEntites(): Promise<string[]>;
     getLogsByEntite(entite: string, entiteId: string): Promise<{
-        id: string;
+        description: string;
         action: import(".prisma/client").$Enums.ActionType;
         entite: string;
         entiteId: string;
-        description: string;
-        ancienneValeur: string | null;
-        nouvelleValeur: string | null;
         userId: string;
         userName: string | null;
+        id: string;
+        ancienneValeur: string | null;
+        nouvelleValeur: string | null;
         ipAddress: string | null;
         userAgent: string | null;
         createdAt: Date;
     }[]>;
     findOne(id: string): Promise<{
-        id: string;
+        description: string;
         action: import(".prisma/client").$Enums.ActionType;
         entite: string;
         entiteId: string;
-        description: string;
-        ancienneValeur: string | null;
-        nouvelleValeur: string | null;
         userId: string;
         userName: string | null;
+        id: string;
+        ancienneValeur: string | null;
+        nouvelleValeur: string | null;
         ipAddress: string | null;
         userAgent: string | null;
         createdAt: Date;

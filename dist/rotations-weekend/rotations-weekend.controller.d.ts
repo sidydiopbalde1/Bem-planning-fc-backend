@@ -48,24 +48,6 @@ export declare class RotationsWeekendController {
         };
     }>;
     findOne(id: string): Promise<{
-        responsable: {
-            id: string;
-            createdAt: Date;
-            name: string | null;
-            email: string;
-            role: import(".prisma/client").$Enums.Role;
-            updatedAt: Date;
-            password: string;
-        };
-        substitut: {
-            id: string;
-            createdAt: Date;
-            name: string | null;
-            email: string;
-            role: import(".prisma/client").$Enums.Role;
-            updatedAt: Date;
-            password: string;
-        } | null;
         rapportSupervision: {
             id: string;
             createdAt: Date;
@@ -78,6 +60,24 @@ export declare class RotationsWeekendController {
             recommandations: string | null;
             satisfaction: number | null;
             rotationId: string;
+        } | null;
+        responsable: {
+            id: string;
+            createdAt: Date;
+            name: string | null;
+            email: string;
+            password: string;
+            role: import(".prisma/client").$Enums.Role;
+            updatedAt: Date;
+        };
+        substitut: {
+            id: string;
+            createdAt: Date;
+            name: string | null;
+            email: string;
+            password: string;
+            role: import(".prisma/client").$Enums.Role;
+            updatedAt: Date;
         } | null;
     } & {
         id: string;
@@ -108,18 +108,18 @@ export declare class RotationsWeekendController {
             createdAt: Date;
             name: string | null;
             email: string;
+            password: string;
             role: import(".prisma/client").$Enums.Role;
             updatedAt: Date;
-            password: string;
         };
         substitut: {
             id: string;
             createdAt: Date;
             name: string | null;
             email: string;
+            password: string;
             role: import(".prisma/client").$Enums.Role;
             updatedAt: Date;
-            password: string;
         } | null;
     } & {
         id: string;

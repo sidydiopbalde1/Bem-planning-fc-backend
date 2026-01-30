@@ -67,9 +67,9 @@ export declare class IntervenantsService {
                 code: string;
             };
         } & {
-            id: string;
             description: string | null;
             userId: string;
+            id: string;
             createdAt: Date;
             name: string;
             updatedAt: Date;
@@ -89,10 +89,10 @@ export declare class IntervenantsService {
             intervenantId: string | null;
         })[];
         disponibilites: {
+            type: import(".prisma/client").$Enums.TypeDisponibilite;
             id: string;
             createdAt: Date;
             updatedAt: Date;
-            type: import(".prisma/client").$Enums.TypeDisponibilite;
             dateDebut: Date | null;
             dateFin: Date | null;
             intervenantId: string;
@@ -108,6 +108,7 @@ export declare class IntervenantsService {
                 code: string;
             };
         } & {
+            salle: string | null;
             id: string;
             createdAt: Date;
             updatedAt: Date;
@@ -118,7 +119,6 @@ export declare class IntervenantsService {
             heureFin: string;
             duree: number;
             typeSeance: import(".prisma/client").$Enums.TypeSeance;
-            salle: string | null;
             batiment: string | null;
             moduleId: string;
             notes: string | null;
@@ -190,9 +190,9 @@ export declare class IntervenantsService {
                     code: string;
                 };
             } & {
-                id: string;
                 description: string | null;
                 userId: string;
+                id: string;
                 createdAt: Date;
                 name: string;
                 updatedAt: Date;
@@ -212,6 +212,7 @@ export declare class IntervenantsService {
                 intervenantId: string | null;
             };
         } & {
+            salle: string | null;
             id: string;
             createdAt: Date;
             updatedAt: Date;
@@ -222,7 +223,6 @@ export declare class IntervenantsService {
             heureFin: string;
             duree: number;
             typeSeance: import(".prisma/client").$Enums.TypeSeance;
-            salle: string | null;
             batiment: string | null;
             moduleId: string;
             notes: string | null;

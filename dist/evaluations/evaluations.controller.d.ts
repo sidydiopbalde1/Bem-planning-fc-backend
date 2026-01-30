@@ -20,9 +20,9 @@ export declare class EvaluationsController {
                     code: string;
                 };
             } & {
-                id: string;
                 description: string | null;
                 userId: string;
+                id: string;
                 createdAt: Date;
                 name: string;
                 updatedAt: Date;
@@ -89,9 +89,9 @@ export declare class EvaluationsController {
         };
         module: {
             programme: {
-                id: string;
                 description: string | null;
                 userId: string;
+                id: string;
                 createdAt: Date;
                 name: string;
                 updatedAt: Date;
@@ -105,9 +105,9 @@ export declare class EvaluationsController {
                 totalVHT: number;
             };
         } & {
-            id: string;
             description: string | null;
             userId: string;
+            id: string;
             createdAt: Date;
             name: string;
             updatedAt: Date;
@@ -166,9 +166,9 @@ export declare class EvaluationsController {
             joursPreferences: string | null;
         };
         module: {
-            id: string;
             description: string | null;
             userId: string;
+            id: string;
             createdAt: Date;
             name: string;
             updatedAt: Date;
@@ -238,9 +238,9 @@ export declare class EvaluationsController {
         };
         module: {
             programme: {
-                id: string;
                 description: string | null;
                 userId: string;
+                id: string;
                 createdAt: Date;
                 name: string;
                 updatedAt: Date;
@@ -254,9 +254,9 @@ export declare class EvaluationsController {
                 totalVHT: number;
             };
         } & {
-            id: string;
             description: string | null;
             userId: string;
+            id: string;
             createdAt: Date;
             name: string;
             updatedAt: Date;
