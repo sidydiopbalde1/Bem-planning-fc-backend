@@ -117,6 +117,12 @@ let ProgrammesService = class ProgrammesService {
             }, 0);
         }
         const { modules, vht, ...programmeData } = data;
+        if (programmeData.dateDebut) {
+            programmeData.dateDebut = new Date(programmeData.dateDebut).toISOString();
+        }
+        if (programmeData.dateFin) {
+            programmeData.dateFin = new Date(programmeData.dateFin).toISOString();
+        }
         const programme = await this.prisma.programme.create({
             data: {
                 ...programmeData,
@@ -153,6 +159,12 @@ let ProgrammesService = class ProgrammesService {
             if (existing) {
                 throw new common_1.ConflictException('Un programme avec ce code existe déjà');
             }
+        }
+        if (data.dateDebut) {
+            data.dateDebut = new Date(data.dateDebut).toISOString();
+        }
+        if (data.dateFin) {
+            data.dateFin = new Date(data.dateFin).toISOString();
         }
         const updatedProgramme = await this.prisma.programme.update({
             where: { id },

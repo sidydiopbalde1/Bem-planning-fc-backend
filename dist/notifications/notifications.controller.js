@@ -22,8 +22,8 @@ let NotificationsController = class NotificationsController {
     constructor(notificationsService) {
         this.notificationsService = notificationsService;
     }
-    findAll(user, page, limit) {
-        return this.notificationsService.findByUser(user.id, page, limit);
+    findAll(user, page = 1, limit = 10, lu) {
+        return this.notificationsService.findByUser(user.id, Number(page), Number(limit), lu !== undefined ? lu === 'true' : undefined);
     }
     markAsRead(user, ids) {
         return this.notificationsService.markAsRead(ids, user.id);
@@ -42,8 +42,9 @@ __decorate([
     __param(0, (0, decorators_1.CurrentUser)()),
     __param(1, (0, common_1.Query)('page')),
     __param(2, (0, common_1.Query)('limit')),
+    __param(3, (0, common_1.Query)('lu')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Number, Number]),
+    __metadata("design:paramtypes", [Object, Object, Object, String]),
     __metadata("design:returntype", void 0)
 ], NotificationsController.prototype, "findAll", null);
 __decorate([

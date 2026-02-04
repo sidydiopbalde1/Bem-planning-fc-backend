@@ -2,7 +2,7 @@ import { PrismaService } from '../prisma/prisma.service';
 export declare class NotificationsService {
     private prisma;
     constructor(prisma: PrismaService);
-    findByUser(userId: string, page?: number, limit?: number): Promise<{
+    findByUser(userId: string, page?: number, limit?: number, lu?: boolean): Promise<{
         notifications: {
             type: import(".prisma/client").$Enums.TypeNotification;
             entite: string | null;

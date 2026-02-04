@@ -28,7 +28,7 @@ exports.default = () => ({
         secret: process.env.CRON_SECRET,
     },
     frontend: {
-        url: process.env.FRONTEND_URL || 'https://bem-planning-fc-frontend-latest5.onrender.com',
+        url: process.env.FRONTEND_URL || 'https://bem-planning-fc.onrender.com',
     },
 });
 //# sourceMappingURL=configuration.js.map

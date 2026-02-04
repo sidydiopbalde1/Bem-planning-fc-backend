@@ -3,7 +3,7 @@ import type { AuthenticatedUser } from '../auth/interfaces/jwt-payload.interface
 export declare class NotificationsController {
     private readonly notificationsService;
     constructor(notificationsService: NotificationsService);
-    findAll(user: AuthenticatedUser, page?: number, limit?: number): Promise<{
+    findAll(user: AuthenticatedUser, page?: number, limit?: number, lu?: string): Promise<{
         notifications: {
             type: import(".prisma/client").$Enums.TypeNotification;
             entite: string | null;

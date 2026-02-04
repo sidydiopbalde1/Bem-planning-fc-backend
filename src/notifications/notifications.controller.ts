@@ -18,15 +18,21 @@ import type { AuthenticatedUser } from '../auth/interfaces/jwt-payload.interface
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
-  @Get()
-  @ApiOperation({ summary: 'Obtenir mes notifications' })
-  findAll(
-    @CurrentUser() user: AuthenticatedUser,
-    @Query('page') page?: number,
-    @Query('limit') limit?: number,
-  ) {
-    return this.notificationsService.findByUser(user.id, page, limit);
-  }
+@Get()
+@ApiOperation({ summary: 'Obtenir mes notifications' })
+findAll(
+  @CurrentUser() user: AuthenticatedUser,
+  @Query('page') page = 1,
+  @Query('limit') limit = 10,
+  @Query('lu') lu?: string,
+) {
+  return this.notificationsService.findByUser(
+    user.id,
+    Number(page),
+    Number(limit),
+    lu !== undefined ? lu === 'true' : undefined,
+  );
+}
 
   @Post('mark-read')
   @ApiOperation({ summary: 'Marquer des notifications comme lues' })

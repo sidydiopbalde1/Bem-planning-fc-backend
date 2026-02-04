@@ -5,27 +5,50 @@ import { PrismaService } from '../prisma/prisma.service';
 export class NotificationsService {
   constructor(private prisma: PrismaService) {}
 
-  async findByUser(userId: string, page = 1, limit = 20) {
-    const skip = (page - 1) * limit;
+async findByUser(
+  userId: string,
+  page = 1,
+  limit = 20,
+  lu?: boolean,
+) {
+  const skip = (page - 1) * limit;
 
-    const [notifications, total, unread] = await Promise.all([
-      this.prisma.notification.findMany({
-        where: { destinataireId: userId },
-        orderBy: { createdAt: 'desc' },
-        skip,
-        take: limit,
-      }),
-      this.prisma.notification.count({ where: { destinataireId: userId } }),
-      this.prisma.notification.count({ where: { destinataireId: userId, lu: false } }),
-    ]);
+  // where dynamique
+  const where: any = { destinataireId: userId };
 
-    return {
-      notifications,
-      unread,
-      pagination: { page, limit, total, pages: Math.ceil(total / limit) },
-      stats: { total, unread }
-    };
+  if (lu !== undefined) {
+    where.lu = lu;
   }
+
+  const [notifications, total, unread] = await Promise.all([
+    this.prisma.notification.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: limit,
+    }),
+    this.prisma.notification.count({ where }),
+    this.prisma.notification.count({
+      where: { destinataireId: userId, lu: false },
+    }),
+  ]);
+
+  return {
+    notifications,
+    unread,
+    pagination: {
+      page,
+      limit,
+      total,
+      pages: Math.ceil(total / limit),
+    },
+    stats: {
+      total,
+      unread,
+    },
+  };
+}
+
 
   async create(data: {
     titre: string;

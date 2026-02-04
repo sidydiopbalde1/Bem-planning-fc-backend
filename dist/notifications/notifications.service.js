@@ -17,23 +17,37 @@ let NotificationsService = class NotificationsService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    async findByUser(userId, page = 1, limit = 20) {
+    async findByUser(userId, page = 1, limit = 20, lu) {
         const skip = (page - 1) * limit;
+        const where = { destinataireId: userId };
+        if (lu !== undefined) {
+            where.lu = lu;
+        }
         const [notifications, total, unread] = await Promise.all([
             this.prisma.notification.findMany({
-                where: { destinataireId: userId },
+                where,
                 orderBy: { createdAt: 'desc' },
                 skip,
                 take: limit,
             }),
-            this.prisma.notification.count({ where: { destinataireId: userId } }),
-            this.prisma.notification.count({ where: { destinataireId: userId, lu: false } }),
+            this.prisma.notification.count({ where }),
+            this.prisma.notification.count({
+                where: { destinataireId: userId, lu: false },
+            }),
         ]);
         return {
             notifications,
             unread,
-            pagination: { page, limit, total, pages: Math.ceil(total / limit) },
-            stats: { total, unread }
+            pagination: {
+                page,
+                limit,
+                total,
+                pages: Math.ceil(total / limit),
+            },
+            stats: {
+                total,
+                unread,
+            },
         };
     }
     async create(data) {
