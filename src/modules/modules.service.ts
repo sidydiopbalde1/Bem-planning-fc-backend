@@ -188,7 +188,7 @@ export class ModulesService {
       ...(data.coefficient !== undefined && { coefficient: parseInt(data.coefficient, 10) || 1 }),
       ...(data.credits !== undefined && { credits: parseInt(data.credits, 10) || 1 }),
       ...(data.status && { status: data.status }),
-      ...(data.progression !== undefined && { progression: data.progression }),
+      ...(data.progression !== undefined && { progression: parseInt(data.progression, 10) || 0 }),
       ...(data.dateDebut !== undefined && { dateDebut: data.dateDebut ? new Date(data.dateDebut) : null }),
       ...(data.dateFin !== undefined && { dateFin: data.dateFin ? new Date(data.dateFin) : null }),
       vht,

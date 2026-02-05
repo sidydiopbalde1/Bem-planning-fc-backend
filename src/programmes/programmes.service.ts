@@ -133,7 +133,7 @@ export class ProgrammesService {
     }
 
     // Extraire les champs à exclure du spread
-    const { modules, vht, ...programmeData } = data;
+    const { modules, vht, userId: dataUserId, ...programmeData } = data;
 
     // Convertir les dates en ISO-8601 DateTime complet pour Prisma
     if (programmeData.dateDebut) {
@@ -147,11 +147,14 @@ export class ProgrammesService {
       data: {
         ...programmeData,
         totalVHT: data.totalVHT || calculatedVHT,
-        userId,
+        user: {
+          connect: { id: userId },
+        },
         modules: data.modules ? {
           create: data.modules.map((m: any) => ({
             ...m,
             vht: (m.cm || 0) + (m.td || 0) + (m.tp || 0) + (m.tpe || 0),
+            user: { connect: { id: userId } },
           })),
         } : undefined,
       },

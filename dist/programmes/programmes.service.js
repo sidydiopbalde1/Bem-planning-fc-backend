@@ -116,7 +116,7 @@ let ProgrammesService = class ProgrammesService {
                 return sum + (m.cm || 0) + (m.td || 0) + (m.tp || 0) + (m.tpe || 0);
             }, 0);
         }
-        const { modules, vht, ...programmeData } = data;
+        const { modules, vht, userId: dataUserId, ...programmeData } = data;
         if (programmeData.dateDebut) {
             programmeData.dateDebut = new Date(programmeData.dateDebut).toISOString();
         }
@@ -127,11 +127,14 @@ let ProgrammesService = class ProgrammesService {
             data: {
                 ...programmeData,
                 totalVHT: data.totalVHT || calculatedVHT,
-                userId,
+                user: {
+                    connect: { id: userId },
+                },
                 modules: data.modules ? {
                     create: data.modules.map((m) => ({
                         ...m,
                         vht: (m.cm || 0) + (m.td || 0) + (m.tp || 0) + (m.tpe || 0),
+                        user: { connect: { id: userId } },
                     })),
                 } : undefined,
             },
