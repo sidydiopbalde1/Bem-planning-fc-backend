@@ -23,11 +23,11 @@ export default () => ({
     secure: process.env.EMAIL_SECURE === 'true',
     user: process.env.EMAIL_USER,
     password: process.env.EMAIL_PASSWORD,
-    from: process.env.EMAIL_FROM || 'noreply@bem-planning.com',
+    from: process.env.EMAIL_FROM || 'newsdb191@bgmail.com',
   },
 
   cron: {
-    enabled: process.env.CRON_ENABLED === 'true',
+    enabled: process.env.CRON_ENABLED !== 'false',
     secret: process.env.CRON_SECRET,
   },
 

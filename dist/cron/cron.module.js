@@ -9,6 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CronModule = void 0;
 const common_1 = require("@nestjs/common");
 const daily_alerts_cron_1 = require("./daily-alerts.cron");
+const rotations_weekend_cron_1 = require("./rotations-weekend.cron");
 const email_module_1 = require("../email/email.module");
 const notifications_module_1 = require("../notifications/notifications.module");
 let CronModule = class CronModule {
@@ -17,7 +18,7 @@ exports.CronModule = CronModule;
 exports.CronModule = CronModule = __decorate([
     (0, common_1.Module)({
         imports: [email_module_1.EmailModule, notifications_module_1.NotificationsModule],
-        providers: [daily_alerts_cron_1.DailyAlertsCron],
+        providers: [daily_alerts_cron_1.DailyAlertsCron, rotations_weekend_cron_1.RotationsWeekendCron],
     })
 ], CronModule);
 //# sourceMappingURL=cron.module.js.map

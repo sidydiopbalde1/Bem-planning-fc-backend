@@ -24,7 +24,7 @@ exports.default = () => ({
         from: process.env.EMAIL_FROM || 'noreply@bem-planning.com',
     },
     cron: {
-        enabled: process.env.CRON_ENABLED === 'true',
+        enabled: process.env.CRON_ENABLED !== 'false',
         secret: process.env.CRON_SECRET,
     },
     frontend: {
