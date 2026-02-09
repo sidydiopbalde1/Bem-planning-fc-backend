@@ -22,9 +22,9 @@ export declare class ProgrammesService {
                     nom: string;
                 } | null;
             } & {
+                id: string;
                 description: string | null;
                 userId: string;
-                id: string;
                 createdAt: Date;
                 name: string;
                 updatedAt: Date;
@@ -43,9 +43,9 @@ export declare class ProgrammesService {
                 programmeId: string;
                 intervenantId: string | null;
             })[];
+            id: string;
             description: string | null;
             userId: string;
-            id: string;
             createdAt: Date;
             name: string;
             updatedAt: Date;
@@ -66,11 +66,6 @@ export declare class ProgrammesService {
         };
     }>;
     findOne(id: string, userId?: string, role?: string): Promise<{
-        user: {
-            id: string;
-            name: string | null;
-            email: string;
-        };
         modules: ({
             intervenant: {
                 id: string;
@@ -91,7 +86,6 @@ export declare class ProgrammesService {
                 joursPreferences: string | null;
             } | null;
             seances: {
-                salle: string | null;
                 id: string;
                 createdAt: Date;
                 updatedAt: Date;
@@ -102,15 +96,16 @@ export declare class ProgrammesService {
                 heureFin: string;
                 duree: number;
                 typeSeance: import(".prisma/client").$Enums.TypeSeance;
+                salle: string | null;
                 batiment: string | null;
                 moduleId: string;
                 notes: string | null;
                 objectifs: string | null;
             }[];
         } & {
+            id: string;
             description: string | null;
             userId: string;
-            id: string;
             createdAt: Date;
             name: string;
             updatedAt: Date;
@@ -129,10 +124,15 @@ export declare class ProgrammesService {
             programmeId: string;
             intervenantId: string | null;
         })[];
+        user: {
+            id: string;
+            name: string | null;
+            email: string;
+        };
     } & {
+        id: string;
         description: string | null;
         userId: string;
-        id: string;
         createdAt: Date;
         name: string;
         updatedAt: Date;
@@ -147,9 +147,9 @@ export declare class ProgrammesService {
     }>;
     create(data: any, userId: string, userName?: string): Promise<{
         modules: {
+            id: string;
             description: string | null;
             userId: string;
-            id: string;
             createdAt: Date;
             name: string;
             updatedAt: Date;
@@ -169,9 +169,9 @@ export declare class ProgrammesService {
             intervenantId: string | null;
         }[];
     } & {
+        id: string;
         description: string | null;
         userId: string;
-        id: string;
         createdAt: Date;
         name: string;
         updatedAt: Date;
@@ -186,9 +186,9 @@ export declare class ProgrammesService {
     }>;
     update(id: string, data: any, userId: string, role: string, userName?: string): Promise<{
         modules: {
+            id: string;
             description: string | null;
             userId: string;
-            id: string;
             createdAt: Date;
             name: string;
             updatedAt: Date;
@@ -208,9 +208,9 @@ export declare class ProgrammesService {
             intervenantId: string | null;
         }[];
     } & {
+        id: string;
         description: string | null;
         userId: string;
-        id: string;
         createdAt: Date;
         name: string;
         updatedAt: Date;

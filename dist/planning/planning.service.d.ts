@@ -41,9 +41,9 @@ export declare class PlanningService {
         endDate?: string;
     }, currentUserId?: string, currentUserName?: string): Promise<{
         module: {
+            id: string;
             description: string | null;
             userId: string;
-            id: string;
             createdAt: Date;
             name: string;
             updatedAt: Date;

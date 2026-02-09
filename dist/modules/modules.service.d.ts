@@ -11,10 +11,8 @@ export declare class ModulesService {
         status?: string;
     }): Promise<{
         data: ({
-            programme: {
-                id: string;
-                name: string;
-                code: string;
+            _count: {
+                seances: number;
             };
             intervenant: {
                 id: string;
@@ -22,13 +20,15 @@ export declare class ModulesService {
                 nom: string;
                 civilite: string;
             } | null;
-            _count: {
-                seances: number;
+            programme: {
+                id: string;
+                name: string;
+                code: string;
             };
         } & {
+            id: string;
             description: string | null;
             userId: string;
-            id: string;
             createdAt: Date;
             name: string;
             updatedAt: Date;
@@ -55,22 +55,6 @@ export declare class ModulesService {
         };
     }>;
     findOne(id: string): Promise<{
-        programme: {
-            description: string | null;
-            userId: string;
-            id: string;
-            createdAt: Date;
-            name: string;
-            updatedAt: Date;
-            code: string;
-            status: import(".prisma/client").$Enums.StatusProgramme;
-            progression: number;
-            dateDebut: Date;
-            dateFin: Date;
-            semestre: import(".prisma/client").$Enums.Semestre;
-            niveau: string;
-            totalVHT: number;
-        };
         intervenant: {
             id: string;
             createdAt: Date;
@@ -96,7 +80,6 @@ export declare class ModulesService {
                 civilite: string;
             };
         } & {
-            salle: string | null;
             id: string;
             createdAt: Date;
             updatedAt: Date;
@@ -107,15 +90,32 @@ export declare class ModulesService {
             heureFin: string;
             duree: number;
             typeSeance: import(".prisma/client").$Enums.TypeSeance;
+            salle: string | null;
             batiment: string | null;
             moduleId: string;
             notes: string | null;
             objectifs: string | null;
         })[];
+        programme: {
+            id: string;
+            description: string | null;
+            userId: string;
+            createdAt: Date;
+            name: string;
+            updatedAt: Date;
+            code: string;
+            status: import(".prisma/client").$Enums.StatusProgramme;
+            progression: number;
+            dateDebut: Date;
+            dateFin: Date;
+            semestre: import(".prisma/client").$Enums.Semestre;
+            niveau: string;
+            totalVHT: number;
+        };
     } & {
+        id: string;
         description: string | null;
         userId: string;
-        id: string;
         createdAt: Date;
         name: string;
         updatedAt: Date;
@@ -135,20 +135,20 @@ export declare class ModulesService {
         intervenantId: string | null;
     }>;
     create(data: any, userId: string, userName?: string): Promise<{
-        programme: {
-            id: string;
-            name: string;
-            code: string;
-        };
         intervenant: {
             id: string;
             prenom: string;
             nom: string;
         } | null;
+        programme: {
+            id: string;
+            name: string;
+            code: string;
+        };
     } & {
+        id: string;
         description: string | null;
         userId: string;
-        id: string;
         createdAt: Date;
         name: string;
         updatedAt: Date;
@@ -168,22 +168,6 @@ export declare class ModulesService {
         intervenantId: string | null;
     }>;
     update(id: string, data: any, currentUserId?: string, currentUserName?: string): Promise<{
-        programme: {
-            description: string | null;
-            userId: string;
-            id: string;
-            createdAt: Date;
-            name: string;
-            updatedAt: Date;
-            code: string;
-            status: import(".prisma/client").$Enums.StatusProgramme;
-            progression: number;
-            dateDebut: Date;
-            dateFin: Date;
-            semestre: import(".prisma/client").$Enums.Semestre;
-            niveau: string;
-            totalVHT: number;
-        };
         intervenant: {
             id: string;
             createdAt: Date;
@@ -202,10 +186,26 @@ export declare class ModulesService {
             heuresMaxSemaine: number;
             joursPreferences: string | null;
         } | null;
+        programme: {
+            id: string;
+            description: string | null;
+            userId: string;
+            createdAt: Date;
+            name: string;
+            updatedAt: Date;
+            code: string;
+            status: import(".prisma/client").$Enums.StatusProgramme;
+            progression: number;
+            dateDebut: Date;
+            dateFin: Date;
+            semestre: import(".prisma/client").$Enums.Semestre;
+            niveau: string;
+            totalVHT: number;
+        };
     } & {
+        id: string;
         description: string | null;
         userId: string;
-        id: string;
         createdAt: Date;
         name: string;
         updatedAt: Date;

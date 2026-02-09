@@ -21,9 +21,9 @@ export declare class SeancesService {
                     code: string;
                 };
             } & {
+                id: string;
                 description: string | null;
                 userId: string;
-                id: string;
                 createdAt: Date;
                 name: string;
                 updatedAt: Date;
@@ -43,7 +43,6 @@ export declare class SeancesService {
                 intervenantId: string | null;
             };
         } & {
-            salle: string | null;
             id: string;
             createdAt: Date;
             updatedAt: Date;
@@ -54,6 +53,7 @@ export declare class SeancesService {
             heureFin: string;
             duree: number;
             typeSeance: import(".prisma/client").$Enums.TypeSeance;
+            salle: string | null;
             batiment: string | null;
             moduleId: string;
             notes: string | null;
@@ -87,9 +87,9 @@ export declare class SeancesService {
         };
         module: {
             programme: {
+                id: string;
                 description: string | null;
                 userId: string;
-                id: string;
                 createdAt: Date;
                 name: string;
                 updatedAt: Date;
@@ -103,9 +103,9 @@ export declare class SeancesService {
                 totalVHT: number;
             };
         } & {
+            id: string;
             description: string | null;
             userId: string;
-            id: string;
             createdAt: Date;
             name: string;
             updatedAt: Date;
@@ -125,7 +125,6 @@ export declare class SeancesService {
             intervenantId: string | null;
         };
     } & {
-        salle: string | null;
         id: string;
         createdAt: Date;
         updatedAt: Date;
@@ -136,6 +135,7 @@ export declare class SeancesService {
         heureFin: string;
         duree: number;
         typeSeance: import(".prisma/client").$Enums.TypeSeance;
+        salle: string | null;
         batiment: string | null;
         moduleId: string;
         notes: string | null;
@@ -161,9 +161,9 @@ export declare class SeancesService {
             joursPreferences: string | null;
         };
         module: {
+            id: string;
             description: string | null;
             userId: string;
-            id: string;
             createdAt: Date;
             name: string;
             updatedAt: Date;
@@ -183,7 +183,6 @@ export declare class SeancesService {
             intervenantId: string | null;
         };
     } & {
-        salle: string | null;
         id: string;
         createdAt: Date;
         updatedAt: Date;
@@ -194,6 +193,7 @@ export declare class SeancesService {
         heureFin: string;
         duree: number;
         typeSeance: import(".prisma/client").$Enums.TypeSeance;
+        salle: string | null;
         batiment: string | null;
         moduleId: string;
         notes: string | null;
@@ -219,9 +219,9 @@ export declare class SeancesService {
             joursPreferences: string | null;
         };
         module: {
+            id: string;
             description: string | null;
             userId: string;
-            id: string;
             createdAt: Date;
             name: string;
             updatedAt: Date;
@@ -241,7 +241,6 @@ export declare class SeancesService {
             intervenantId: string | null;
         };
     } & {
-        salle: string | null;
         id: string;
         createdAt: Date;
         updatedAt: Date;
@@ -252,6 +251,7 @@ export declare class SeancesService {
         heureFin: string;
         duree: number;
         typeSeance: import(".prisma/client").$Enums.TypeSeance;
+        salle: string | null;
         batiment: string | null;
         moduleId: string;
         notes: string | null;
@@ -264,7 +264,6 @@ export declare class SeancesService {
         notes?: string;
         realDuration?: number;
     }, currentUserId?: string, currentUserName?: string): Promise<{
-        salle: string | null;
         id: string;
         createdAt: Date;
         updatedAt: Date;
@@ -275,6 +274,7 @@ export declare class SeancesService {
         heureFin: string;
         duree: number;
         typeSeance: import(".prisma/client").$Enums.TypeSeance;
+        salle: string | null;
         batiment: string | null;
         moduleId: string;
         notes: string | null;
