@@ -70,6 +70,11 @@ export declare class JournalService {
                     action: number;
                 };
             })[];
+            byEntities: (import(".prisma/client").Prisma.PickEnumerable<import(".prisma/client").Prisma.JournalActiviteGroupByOutputType, "entite"[]> & {
+                _count: {
+                    entite: number;
+                };
+            })[];
         };
         pagination: {
             page: number;

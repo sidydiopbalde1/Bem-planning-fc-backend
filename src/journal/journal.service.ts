@@ -103,6 +103,12 @@ export class JournalService {
           orderBy: { _count: { action: 'desc' } },
           take: 5,
         }),
+        byEntities: await this.prisma.journalActivite.groupBy({
+          by: ['entite'],
+          _count: { entite: true },
+          orderBy: { _count: { entite: 'desc' } },
+          take: 10,
+        }),
       },
       pagination: { page, limit, total, pages: Math.ceil(total / limit) },
     };
