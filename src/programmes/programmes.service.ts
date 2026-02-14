@@ -72,7 +72,7 @@ export class ProgrammesService {
 
       return { ...p, alerts };
     });
-
+ 
     const limit = pagination.limit ?? 20;
 
     return {
