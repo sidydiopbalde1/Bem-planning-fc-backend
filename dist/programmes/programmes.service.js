@@ -126,7 +126,7 @@ let ProgrammesService = class ProgrammesService {
         const programme = await this.prisma.programme.create({
             data: {
                 ...programmeData,
-                totalVHT: data.totalVHT || calculatedVHT,
+                totalVHT: data.totalVHT ? parseInt(data.totalVHT, 10) : calculatedVHT,
                 user: {
                     connect: { id: userId },
                 },
